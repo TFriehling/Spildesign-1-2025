@@ -5,8 +5,9 @@ public class PlayerMovement : MonoBehaviour
 {
     private float horizontal;
     private float vertical;
-    [SerializeField] private Rigidbody2D rb;
+    private Rigidbody2D rb;
     private float speed = 0;
+    public float backingSpeed;
     public Vector3 startRotation;
     public float rotateSpeed = 20;
     float horizontalPercent = 0.00f;
@@ -16,20 +17,52 @@ public class PlayerMovement : MonoBehaviour
     public float deacceleration = 0.5f;
     private bool NE = false;
     private bool SE = false;
-
+    //private Vector2 movementDirectionP1;
     public float maxSpeed = 8;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        horizontalPercent = (-77 / 90f) * -1;
-        verticalPercent = 1 - (-77 / 90f) * -1;
+        if (transform.rotation.eulerAngles.z >= 0f && transform.rotation.eulerAngles.z <= 180f)
+        {
+            if (transform.rotation.eulerAngles.z < 90f)
+            {
+                horizontalPercent = (transform.rotation.eulerAngles.z / 90f) * -1;
+                verticalPercent = 1 - (transform.rotation.eulerAngles.z / 90f);
+            }
+            if (transform.rotation.eulerAngles.z >= 90 && transform.rotation.eulerAngles.z < 180)
+            {
+                horizontalPercent = (1 - (transform.rotation.eulerAngles.z - 90f) / 90f) * -1;
+                verticalPercent = ((transform.rotation.eulerAngles.z - 90f) / 90f) * -1;
+            }
+
+        }
+        else
+        {
+            if ((transform.rotation.eulerAngles.z) >= 180 && transform.rotation.eulerAngles.z < 270)
+            {
+
+                horizontalPercent = ((transform.rotation.eulerAngles.z - 180) / 90f);
+                verticalPercent = (1 - ((transform.rotation.eulerAngles.z - 180) / 90f)) * -1;
+                //Debug.Log(horizontalPercent);
+                //Debug.Log(verticalPercent);
+            }
+            else if (transform.rotation.eulerAngles.z > 270f)
+            {
+                //Debug.Log("T2");
+                horizontalPercent = (1 - (transform.rotation.eulerAngles.z - 270) / 90f);
+                verticalPercent = ((transform.rotation.eulerAngles.z - 270) / 90f);
+            }
 
 
+        }
 
-        Debug.Log(horizontalPercent);
-        Debug.Log(verticalPercent);
+
+        rb = GetComponent<Rigidbody2D>();
+
+        //Debug.Log(horizontalPercent);
+        //Debug.Log(verticalPercent);
     }
 
     // Update is called once per frame
@@ -69,12 +102,12 @@ public class PlayerMovement : MonoBehaviour
                     
                     horizontalPercent = ((transform.rotation.eulerAngles.z-180) / 90f);
                     verticalPercent = (1 - ((transform.rotation.eulerAngles.z-180) / 90f)) * -1;
-                    Debug.Log(horizontalPercent);
-                    Debug.Log(verticalPercent);
+                    //Debug.Log(horizontalPercent);
+                    //Debug.Log(verticalPercent);
                 }
                 else if (transform.rotation.eulerAngles.z > 270f)
                 {
-                    Debug.Log("T2");
+                    //Debug.Log("T2");
                     horizontalPercent = (1 - (transform.rotation.eulerAngles.z - 270) / 90f);
                     verticalPercent = ((transform.rotation.eulerAngles.z - 270) / 90f);
                 }
@@ -113,12 +146,12 @@ public class PlayerMovement : MonoBehaviour
 
                     horizontalPercent = ((transform.rotation.eulerAngles.z - 180) / 90f);
                     verticalPercent = (1 - ((transform.rotation.eulerAngles.z - 180) / 90f)) * -1;
-                    Debug.Log(horizontalPercent);
-                    Debug.Log(verticalPercent);
+                    //Debug.Log(horizontalPercent);
+                    //Debug.Log(verticalPercent);
                 }
                 else if (transform.rotation.eulerAngles.z > 270f)
                 {
-                    Debug.Log("T2");
+                    //Debug.Log("T2");
                     horizontalPercent = (1 - (transform.rotation.eulerAngles.z - 270) / 90f);
                     verticalPercent = ((transform.rotation.eulerAngles.z - 270) / 90f);
                 }
@@ -134,15 +167,29 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.W) && speed <= maxSpeed)
         {
              speed += Time.deltaTime * acceleration;
+            
+        }
+        else if (Input.GetKey(KeyCode.S) && speed >= maxSpeed *-1)
+        {
+
+            speed -= Time.deltaTime * backingSpeed;
         }
 
         //bruger horizontalP og verticalP samt speed og acceleration til at bevæge player
-        rb.linearVelocity = new Vector2(horizontalPercent * speed * acceleration, verticalPercent * speed * acceleration);
+        
 
-        if (speed <= maxSpeed && speed > 0 && !Input.GetKey(KeyCode.W))
+            rb.linearVelocity = new Vector2(horizontalPercent * speed, verticalPercent * speed);
+        
+
+        if (speed <= maxSpeed && !Input.GetKey(KeyCode.W) && speed >= 0)
 
         {
             speed -= Time.deltaTime * deacceleration;
+        }
+        else if (speed >= maxSpeed * -1 && !Input.GetKey(KeyCode.S) && speed < 0)
+         {
+            speed += Time.deltaTime * deacceleration;
+
         }
 
 
