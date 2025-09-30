@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 668979875}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -368,12 +368,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4136f50bd114548991bde30746feaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backingSpeed: 1
+  backingSpeed: 8
   startRotation: {x: 0, y: 0, z: 0}
-  rotateSpeed: 30
-  acceleration: 1
-  deacceleration: 0.5
-  maxSpeed: 8
+  rotateSpeed: 50
+  acceleration: 20
+  deacceleration: 20
+  maxSpeed: 10
 --- !u!50 &668979871
 Rigidbody2D:
   serializedVersion: 5
@@ -773,7 +773,7 @@ GameObject:
   - component: {fileID: 1750090754}
   m_Layer: 6
   m_Name: Player2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
