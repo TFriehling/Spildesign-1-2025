@@ -39,6 +39,9 @@ public class PlayerMovementNonTank : MonoBehaviour
         {
             transform.Rotate(Vector3.back, rotateSpeed * Time.deltaTime);
         }
-
+        else
+        {
+            rotateSpeed = 0; 
+        }
     }
 }
