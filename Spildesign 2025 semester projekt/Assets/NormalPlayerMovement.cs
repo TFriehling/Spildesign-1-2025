@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class NormalPlayerMovement : MonoBehaviour
 {
-    public float speed;
+    private float speed;
     Vector2 Dir = new Vector2(0, 0);
     public Rigidbody2D rb;
     public float maxSpeed;
