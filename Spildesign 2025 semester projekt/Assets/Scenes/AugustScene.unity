@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &594567491
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1143,12 +1143,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4136f50bd114548991bde30746feaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backingSpeed: 18
+  backingSpeed: 10
   startRotation: {x: 0, y: 0, z: 0}
-  rotateSpeed: 75
-  acceleration: 12
-  deacceleration: 14
-  maxSpeed: 22
+  rotateSpeed: 80
+  acceleration: 10
+  deacceleration: 20
+  maxSpeed: 10
 --- !u!50 &1513113872
 Rigidbody2D:
   serializedVersion: 5
@@ -1281,9 +1281,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1669601706}
-  maxSpeed: 18
-  acceleration: 12
-  deAcceleration: 14
+  maxSpeed: 8
+  acceleration: 10
+  deAcceleration: 20
 --- !u!60 &1669601704
 PolygonCollider2D:
   m_ObjectHideFlags: 0
