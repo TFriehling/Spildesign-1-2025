@@ -1595,9 +1595,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backingSpeed: 8
-  startRotation: 90
+  startRotation: 0
   rotateSpeed: 50
-  acceleration: 40
+  acceleration: 20
   deacceleration: 28
   maxSpeed: 30
   accelerationFailsafe: 0
