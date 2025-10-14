@@ -858,7 +858,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ef6dc98dce93a4e88bde4f1cac52a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
   rb: {fileID: 1218494178}
   maxSpeed: 15
   acceleration: 10
@@ -1035,6 +1034,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1221606151}
   - component: {fileID: 1221606152}
+  - component: {fileID: 1221606153}
   m_Layer: 7
   m_Name: PlayerPointer
   m_TagString: Untagged
@@ -1112,6 +1112,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1221606153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221606150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0fde4ed919afc4f9ea5b05fe67113c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 7654469813074782612, guid: f400033b1c737d941a8154390d4e3140, type: 3}
 --- !u!1 &1384542413
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,7 +1525,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869103052}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72bc79d378a413f458e7757a92ffa883, type: 3}
   m_Name: 
@@ -1582,11 +1595,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backingSpeed: 8
-  startRotation: {x: 0, y: 0, z: 0}
+  startRotation: 90
   rotateSpeed: 50
-  acceleration: 28
+  acceleration: 40
   deacceleration: 28
-  maxSpeed: 12
+  maxSpeed: 30
+  accelerationFailsafe: 0
 --- !u!50 &1869103056
 Rigidbody2D:
   serializedVersion: 5

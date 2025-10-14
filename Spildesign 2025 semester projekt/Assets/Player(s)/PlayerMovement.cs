@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private float speed = 0;
     public float backingSpeed;
-    public Vector3 startRotation;
+    public float startRotation;
     public float rotateSpeed = 20;
     float horizontalPercent = 0.00f;
     private float verticalPercent = 0.00f;
@@ -18,12 +18,22 @@ public class PlayerMovement : MonoBehaviour
     private bool NE = false;
     private bool SE = false;
     //private Vector2 movementDirectionP1;
-    public float maxSpeed = 8;
-
+    public float maxSpeed;
+    public bool accelerationFailsafe = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (acceleration >= maxSpeed && accelerationFailsafe == true)
+
+        {
+            acceleration = maxSpeed - 1;
+            Debug.Log("Acceleration was made lower than maximum speed");
+        }
+
+
+        transform.Rotate(Vector3.back, startRotation);
+
         if (transform.rotation.eulerAngles.z >= 0f && transform.rotation.eulerAngles.z <= 180f)
         {
             if (transform.rotation.eulerAngles.z < 90f)
@@ -48,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
                 //Debug.Log(horizontalPercent);
                 //Debug.Log(verticalPercent);
             }
-            else if (transform.rotation.eulerAngles.z > 270f)
+            else if (transform.rotation.eulerAngles.z >= 270f)
             {
                 //Debug.Log("T2");
                 horizontalPercent = (1 - (transform.rotation.eulerAngles.z - 270) / 90f);
@@ -61,8 +71,8 @@ public class PlayerMovement : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
 
-        //Debug.Log(horizontalPercent);
-        //Debug.Log(verticalPercent);
+        Debug.Log(horizontalPercent);
+        Debug.Log(verticalPercent);
     }
 
     // Update is called once per frame
@@ -176,18 +186,23 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //bruger horizontalP og verticalP samt speed og acceleration til at bevæge player
-        
 
+
+        
             rb.linearVelocity = new Vector2(horizontalPercent * speed, verticalPercent * speed);
         
 
-        if (speed <= maxSpeed && !Input.GetKey(KeyCode.W) && speed >= 0)
+        if (!Input.GetKey(KeyCode.W) && speed >= 0)
 
         {
             speed -= Time.deltaTime * deacceleration;
+            if ( speed < 1)
+            {
+                speed = 0;
+            }
         }
         else if (speed >= maxSpeed * -1 && !Input.GetKey(KeyCode.S) && speed < 0)
-         {
+        {
             speed += Time.deltaTime * deacceleration;
 
         }
