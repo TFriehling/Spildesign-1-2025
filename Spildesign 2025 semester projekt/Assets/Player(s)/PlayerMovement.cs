@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed;
     public bool accelerationFailsafe = false;
 
+    public GameObject powerUpManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -209,5 +211,13 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "SpeedBoost")
+        {
+            powerUpManager.GetComponent<PickUpScript>().AddPowerUpToPlayer1("SpeedBoost");
+        }
     }
 }
