@@ -218,6 +218,18 @@ public class PlayerMovement : MonoBehaviour
         if (collision.tag == "SpeedBoost")
         {
             powerUpManager.GetComponent<PickUpScript>().AddPowerUpToPlayer1("SpeedBoost");
+            Destroy(collision.gameObject);
         }
+        else if (collision.tag == "Shield")
+        {
+            powerUpManager.GetComponent<PickUpScript>().AddPowerUpToPlayer1("Shield");
+            Destroy(collision.gameObject);
+        }
+        else if (collision.tag == "MultiShot")
+        {
+            powerUpManager.GetComponent<PickUpScript>().AddPowerUpToPlayer1("MultiShot");
+            Destroy(collision.gameObject);
+        }
+
     }
 }
