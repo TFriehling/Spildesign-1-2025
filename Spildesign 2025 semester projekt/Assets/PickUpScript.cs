@@ -14,12 +14,27 @@ public class PickUpScript : MonoBehaviour
     bool hasDeliveredOnce;
     [SerializeField] List<GameObject> objTestList = new List<GameObject>();
     GameObject compareObj;
+    public GameObject[] p1PowerUpDisplay = new GameObject[3];
+    public GameObject[] p2PowerUpDisplay= new GameObject[3];
+    Dictionary<string, Sprite> powerVis = new Dictionary<string, Sprite>();
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         powerUpObject = new GameObject();
         compareObj = new GameObject();
+
+        powerVis.Add("SpeedBoost", powerUpPrefabs[0].GetComponent<SpriteRenderer>().sprite);
+        powerVis.Add("Shield", powerUpPrefabs[1].GetComponent<SpriteRenderer>().sprite);
+        powerVis.Add("MultiShot", powerUpPrefabs[2].GetComponent<SpriteRenderer>().sprite);
+
+        for (int i = 0; i < p1PowerUpDisplay.Length; i++)
+        {
+            p1PowerUpDisplay[i].SetActive(false);
+            p2PowerUpDisplay[i].SetActive(false);
+        }
+
     }
 
     // Update is called once per frame
@@ -31,6 +46,7 @@ public class PickUpScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             UseSinglePowerUpP1(0);
+            UpdatePowerUpDisplay();
         }
 
         if (p1powerUpTimers.Count >= 1)
@@ -43,6 +59,7 @@ public class PickUpScript : MonoBehaviour
                 tempRef = p1PowerUps[0];
                 p1PowerUps.RemoveAt(0);
                 Destroy(tempRef);
+                UpdatePowerUpDisplay();
             }
         }
         if (p1powerUpTimers.Count >= 2)
@@ -54,6 +71,7 @@ public class PickUpScript : MonoBehaviour
                 tempRef = p1PowerUps[1];
                 p1PowerUps.RemoveAt(1);
                 Destroy(tempRef);
+                UpdatePowerUpDisplay();
             }
         }
         if (p1powerUpTimers.Count >= 3)
@@ -65,6 +83,7 @@ public class PickUpScript : MonoBehaviour
                 tempRef = p1PowerUps[2];
                 p1PowerUps.RemoveAt(2);
                 Destroy(tempRef);
+                UpdatePowerUpDisplay();
             } 
 
         }
@@ -76,6 +95,7 @@ public class PickUpScript : MonoBehaviour
                 p2powerUpTimers.Remove(p2powerUpTimers[0]);
                 p2PowerUps[0].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(0);
+                UpdatePowerUpDisplay();
             }
         }
         if (p2powerUpTimers.Count >= 2)
@@ -85,6 +105,7 @@ public class PickUpScript : MonoBehaviour
                 p2powerUpTimers.Remove(p2powerUpTimers[1]);
                 p2PowerUps[1].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(1);
+                UpdatePowerUpDisplay();
             }
         }
         if (p2powerUpTimers.Count >= 3)
@@ -94,6 +115,7 @@ public class PickUpScript : MonoBehaviour
                 p2powerUpTimers.Remove(p2powerUpTimers[2]);
                 p2PowerUps[2].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(2);
+                UpdatePowerUpDisplay();
             }
 
         }
@@ -114,89 +136,95 @@ public class PickUpScript : MonoBehaviour
                 p2powerUpTimers[i] -= Time.deltaTime;
             }
         }
+
+
     }
 
 
     public void DeliverAllPowerUpsToP1()
     {
-        bool duplicateFound = false;
-        for (int i = 0; i < p2PowerUps.Count; i++)
+        if (p2PowerUps.Count > 0)
         {
-            GameObject compareObj = p2PowerUps[i];
-            for (int j = 0; j < p1PowerUps.Count; ++j)
+            bool duplicateFound = false;
+            for (int i = 0; i < p2PowerUps.Count; i++)
             {
+                GameObject compareObj = p2PowerUps[i];
+                for (int j = 0; j < p1PowerUps.Count; ++j)
+                {
+                    if (p1PowerUps[i].Equals(compareObj))
+                    {
+                        duplicateFound = true;
+                    }
+
+                }
+                if (duplicateFound == false && p2PowerUps[i].GetComponent<PowerUp>().IsActive() == false)
+                {
+                    p1PowerUps.Add(p2PowerUps[i]);
+                    if (p2PowerUps[i].GetComponent<SpeedBoost>().powerTime % 1 >= 0)
+                    {
+                        p1powerUpTimers.Add(p2PowerUps[i].GetComponent<SpeedBoost>().powerTime);
+                    }
+                    if (p2PowerUps[i].GetComponent<Shield>().powerTime % 1 >= 0)
+                    {
+                        p1powerUpTimers.Add(p2PowerUps[i].GetComponent<Shield>().powerTime);
+                    }
+                    if (p2PowerUps[i].GetComponent<MultiShot>().powerTime % 1 >= 0)
+                    {
+                        p1powerUpTimers.Add(p2PowerUps[i].GetComponent<MultiShot>().powerTime);
+                    }
+                    p2powerUpTimers.Remove(p2powerUpTimers[i]);
+                    p2PowerUps.Remove(p2PowerUps[i]);
+                }
+                duplicateFound = false;
+            }
+            UpdatePowerUpDisplay();
+        }
+    }
+
+    public void DeliverOnePowerUpToP1(int powerNumber)
+    {
+        if (p2PowerUps.Count > 0)
+        {
+            Debug.Log("Heyo1");
+            bool duplicateFound = false;
+
+            for (int i = 0; i < p1PowerUps.Count; i++)
+            {
+
+
+                compareObj = p2PowerUps[p2PowerUps.Count - powerNumber - 1];
+
+
                 if (p1PowerUps[i].Equals(compareObj))
                 {
                     duplicateFound = true;
                 }
 
             }
-            if (duplicateFound == false && p2PowerUps[i].GetComponent<PowerUp>().IsActive() == false)
+
+            if (duplicateFound == false && p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<PowerUp>().IsActive() == false)
             {
-                p1PowerUps.Add(p2PowerUps[i]);
-                if (p2PowerUps[i].GetComponent<SpeedBoost>().powerTime % 1 >= 0)
+
+                p1PowerUps.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1]);
+
+
+                if (p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<PowerUp>().IsActive() == false)
                 {
-                    p1powerUpTimers.Add(p2PowerUps[i].GetComponent<SpeedBoost>().powerTime);
+                    p1powerUpTimers.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<PowerUp>().GetPowerTime());
                 }
-                if (p2PowerUps[i].GetComponent<Shield>().powerTime % 1 >= 0)
-                {
-                    p1powerUpTimers.Add(p2PowerUps[i].GetComponent<Shield>().powerTime);
-                }
-                if (p2PowerUps[i].GetComponent<MultiShot>().powerTime % 1 >= 0)
-                {
-                    p1powerUpTimers.Add(p2PowerUps[i].GetComponent<MultiShot>().powerTime);
-                }
-                p2powerUpTimers.Remove(p2powerUpTimers[i]);
-                p2PowerUps.Remove(p2PowerUps[i]);
+                
+
+                Debug.Log("Heyo2");
+                p2powerUpTimers.RemoveAt(p2powerUpTimers.Count - 1);
+                p2PowerUps.RemoveAt(p2PowerUps.Count - 1);
+                Debug.Log("Heyo3");
+
             }
+            Debug.Log("Heyo4");
             duplicateFound = false;
+            hasDeliveredOnce = true;
+            UpdatePowerUpDisplay();
         }
-    }
-
-    public void DeliverOnePowerUpToP1(int powerNumber)
-    {
-        bool duplicateFound = false;
-        
-         for (int i = 0; i < p1PowerUps.Count; i++)
-         {
-
-            
-            compareObj = p2PowerUps[p2PowerUps.Count - powerNumber - 1];
-
-
-            if (p1PowerUps[i].Equals(compareObj))
-            {
-                duplicateFound = true;
-            }
-
-         }
-        
-        if (duplicateFound == false && p2PowerUps[p2PowerUps.Count - powerNumber-1].GetComponent<PowerUp>().IsActive() == false)
-        {
-            
-            p1PowerUps.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1]);
-            
-
-            if (p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<SpeedBoost>().powerTime % 1 >= 0)
-            {
-                p1powerUpTimers.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<SpeedBoost>().powerTime);
-            }
-            else if (p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<Shield>().powerTime % 1 >= 0)
-            {
-                p1powerUpTimers.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<Shield>().powerTime);
-            }
-            else if (p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<MultiShot>().powerTime % 1 >= 0)
-            {
-            p1powerUpTimers.Add(p2PowerUps[p2PowerUps.Count - powerNumber - 1].GetComponent<MultiShot>().powerTime);
-            }
-
-
-            p2powerUpTimers.RemoveAt(p2powerUpTimers.Count - powerNumber -1);
-            p2PowerUps.RemoveAt(p2PowerUps.Count - powerNumber - 1);
-            
-        }
-        duplicateFound = false;
-        hasDeliveredOnce = true;
     }
 
     public void AddPowerUpToPlayer2(string pickUp)
@@ -277,6 +305,7 @@ public class PickUpScript : MonoBehaviour
             duplicateFound = false;
 
         }
+        UpdatePowerUpDisplay();
     }
 
     public void AddPowerUpToPlayer1(string pickUp)
@@ -356,6 +385,7 @@ public class PickUpScript : MonoBehaviour
 
             duplicateFound = false;
         }
+        UpdatePowerUpDisplay();
     }
 
     public void UseSinglePowerUpP1(int powerNumber)
@@ -372,6 +402,7 @@ public class PickUpScript : MonoBehaviour
             }
 
         }
+        UpdatePowerUpDisplay();
     }
     public void UseSinglePowerUpP2(int powerNumber)
     {
@@ -387,6 +418,7 @@ public class PickUpScript : MonoBehaviour
             }
 
         }
+        UpdatePowerUpDisplay();
 
     }
 
@@ -399,7 +431,7 @@ public class PickUpScript : MonoBehaviour
                 p1PowerUps[i].GetComponent<PowerUp>().UseOnP1();
             }
         }
-
+        UpdatePowerUpDisplay();
     }
     public void UseAllPowerUpsP2()
     {
@@ -410,6 +442,43 @@ public class PickUpScript : MonoBehaviour
                 p2PowerUps[i].GetComponent<PowerUp>().UseOnP2();
             }
         }
+        UpdatePowerUpDisplay();
+    }
+    public void UpdatePowerUpDisplay()
+    {
+        
+            for (int i = 0; i < p1PowerUpDisplay.Length; i++)
+            {
+               if (i < p1PowerUps.Count && p1PowerUps[i].GetComponent<PowerUp>().IsActive() == false)
+               {
+                p1PowerUpDisplay[i].SetActive(true);
+                p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().sprite = powerVis[p1PowerUps[i].name];
+               }
+               else if (i < p1PowerUps.Count && p1PowerUps[i].GetComponent<PowerUp>().IsActive() == true)
+               {
+                p1PowerUpDisplay[i].SetActive(true);
+                p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().sprite = powerVis[p1PowerUps[i].name];
+                p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+               }
+               else
+            {
+                p1PowerUpDisplay[i].SetActive(false);
+
+            }
+            }
+            for (int i = 0; i < p2PowerUpDisplay.Length; i++)
+            {
+              if (i < p2PowerUps.Count)
+              {
+                p2PowerUpDisplay[i].SetActive(true);
+                p2PowerUpDisplay[i].GetComponent<SpriteRenderer>().sprite = powerVis[p2PowerUps[i].name];
+              }
+              else
+              {
+                p2PowerUpDisplay[i].SetActive(false);
+
+              }
+            }
 
     }
 }
@@ -424,6 +493,7 @@ abstract class PowerUp : MonoBehaviour
     public abstract void ResetOnP1();
     public abstract void UseOnP2();
     public abstract void ResetOnP2();
+    public abstract float GetPowerTime();
 
 }
 
@@ -446,6 +516,10 @@ class SpeedBoost : PowerUp
             return false; 
         
         }
+    }
+    public override float GetPowerTime()
+    {
+        return powerTime;
     }
     public override void UseOnP1()
     {
@@ -492,6 +566,10 @@ class Shield : PowerUp
 
         }
     }
+    public override float GetPowerTime()
+    {
+        return powerTime;
+    }
     public override void UseOnP1()
     {
         isActive = true;
@@ -516,6 +594,11 @@ class MultiShot : PowerUp
     public int shots = 3;
     public float powerTime = 40;
     public bool isActive = false;
+
+    public override float GetPowerTime()
+    {
+        return powerTime;
+    }
 
     public override bool IsActive()
     {
