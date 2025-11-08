@@ -17,13 +17,20 @@ public class PickUpScript : MonoBehaviour
     public GameObject[] p1PowerUpDisplay = new GameObject[3];
     public GameObject[] p2PowerUpDisplay= new GameObject[3];
     Dictionary<string, Sprite> powerVis = new Dictionary<string, Sprite>();
-
+    public float powerUpSpawnRate = 20;
+    float spawnTimer;
+    Vector3[] spawnPositions = new Vector3[5];
+    bool[] powerUpInLocation = new bool[5];
+    int powerUpsSpawned = 0;
+    public int p1MaxPowerUps = 3;
+    public int p2MaxPowerUps = 3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         powerUpObject = new GameObject();
         compareObj = new GameObject();
+        spawnTimer = powerUpSpawnRate;
 
         powerVis.Add("SpeedBoost", powerUpPrefabs[0].GetComponent<SpriteRenderer>().sprite);
         powerVis.Add("Shield", powerUpPrefabs[1].GetComponent<SpriteRenderer>().sprite);
@@ -40,6 +47,7 @@ public class PickUpScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
 
         GameObject tempRef;
 
@@ -118,6 +126,24 @@ public class PickUpScript : MonoBehaviour
                 UpdatePowerUpDisplay();
             }
 
+        }
+
+        if (spawnTimer > 0)
+        {
+            spawnTimer -= Time.deltaTime;
+
+        }
+        else if (spawnTimer <= 0 && powerUpsSpawned >= 6)
+        {
+            
+            spawnTimer = Random.Range(1, powerUpSpawnRate);
+        }
+        else if (spawnTimer <= 0)
+        {
+
+            Instantiate<GameObject>(powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)], new Vector3(Random.Range(-19, 7), Random.Range(-8, 9)), Quaternion.identity);
+            powerUpsSpawned++;
+            spawnTimer = powerUpSpawnRate;
         }
 
         for (int i = 0; i < p1powerUpTimers.Count; i++)
@@ -230,7 +256,7 @@ public class PickUpScript : MonoBehaviour
     public void AddPowerUpToPlayer2(string pickUp)
     {
         bool duplicateFound = false;
-        if (p2PowerUps.Count < 3)
+        if (p2PowerUps.Count < p2MaxPowerUps)
         {
             if (pickUp == "SpeedBoost")
             {
@@ -311,7 +337,7 @@ public class PickUpScript : MonoBehaviour
     public void AddPowerUpToPlayer1(string pickUp)
     {
         bool duplicateFound = false;
-        if (p1PowerUps.Count < 3)
+        if (p1PowerUps.Count < p1MaxPowerUps)
         {
             if (pickUp == "SpeedBoost")
             {
@@ -400,9 +426,10 @@ public class PickUpScript : MonoBehaviour
             {
                 p1PowerUps[powerNumber-1].GetComponent<PowerUp>().UseOnP1();
             }
-
+            powerUpsSpawned--;
         }
         UpdatePowerUpDisplay();
+        
     }
     public void UseSinglePowerUpP2(int powerNumber)
     {
@@ -416,7 +443,7 @@ public class PickUpScript : MonoBehaviour
             {
                 p2PowerUps[powerNumber - 1].GetComponent<PowerUp>().UseOnP2();
             }
-
+            powerUpsSpawned--;
         }
         UpdatePowerUpDisplay();
 
@@ -429,6 +456,7 @@ public class PickUpScript : MonoBehaviour
             if (p1PowerUps[i].GetComponent<PowerUp>().IsActive() == false)
             {
                 p1PowerUps[i].GetComponent<PowerUp>().UseOnP1();
+                powerUpsSpawned--;
             }
         }
         UpdatePowerUpDisplay();
@@ -440,6 +468,7 @@ public class PickUpScript : MonoBehaviour
             if (p2PowerUps[i].GetComponent<PowerUp>().IsActive() == false)
             {
                 p2PowerUps[i].GetComponent<PowerUp>().UseOnP2();
+                powerUpsSpawned--;
             }
         }
         UpdatePowerUpDisplay();

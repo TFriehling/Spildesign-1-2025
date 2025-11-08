@@ -2060,11 +2060,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2615991081826220499, guid: 0dfa7a552b89deb43aaee1141974d63e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.520469
+      value: 5.74
       objectReference: {fileID: 0}
     - target: {fileID: 2615991081826220499, guid: 0dfa7a552b89deb43aaee1141974d63e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.9598823
+      value: -8.48
       objectReference: {fileID: 0}
     - target: {fileID: 2615991081826220499, guid: 0dfa7a552b89deb43aaee1141974d63e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2362,6 +2362,14 @@ MonoBehaviour:
   - {fileID: 2015266054}
   - {fileID: 804338625}
   - {fileID: 401658509}
+  powerUpSpawnRate: 20
+  spawnPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  powerUpInLocation: 0000000000
 --- !u!4 &1870121597
 Transform:
   m_ObjectHideFlags: 0
