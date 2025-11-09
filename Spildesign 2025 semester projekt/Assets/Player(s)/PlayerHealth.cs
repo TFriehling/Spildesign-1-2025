@@ -6,6 +6,8 @@ public class PlayerHealth : MonoBehaviour
     float healthLossCooldown = 0;
     public string playerName;
     private Collider2D playerCollider;
+
+    public int bonusHealth = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,17 +37,30 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (healthLossCooldown == 0)
+        if (healthLossCooldown == 0 && gameObject.name != "Player1")
         {
-            LoseHealth(20);
+            LoseHealth(1);
             healthLossCooldown += 0;
             Debug.Log(playerName +" lost 20 health");
+        }
+        else if (healthLossCooldown == 0 && collision.name != "PlayerBullet(Clone)")
+        {
+            LoseHealth(1);
+            healthLossCooldown += 0;
+            Debug.Log(playerName + " lost 20 health");
         }
     }
 
     void LoseHealth(int damage)
     {
-        health -= damage;
+        if (bonusHealth > 0)
+        {
+            bonusHealth -= damage;
+        }
+        else if (bonusHealth <= 0)
+        {
+            health -= damage;
+        }
 
     }
         

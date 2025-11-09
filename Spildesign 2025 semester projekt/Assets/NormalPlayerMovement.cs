@@ -10,6 +10,12 @@ public class NormalPlayerMovement : MonoBehaviour
     public float acceleration;
     public float deAcceleration;
     public GameObject powerUpManager;
+
+    //Extra Attributes
+    public float bonusMaxSpeed = 0;
+    public float bonusAcceleration = 0;
+    public float bonusDeacceleration = 0f;
+
     void Update()
     {
         
@@ -18,9 +24,9 @@ public class NormalPlayerMovement : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             Dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            if (speed <= maxSpeed && speed >= -1)
+            if (speed <= (maxSpeed+bonusMaxSpeed) && speed >= -1)
             {
-                speed += (Time.deltaTime * acceleration);
+                speed += (Time.deltaTime * (acceleration+bonusAcceleration));
 
             }
 
@@ -32,7 +38,7 @@ public class NormalPlayerMovement : MonoBehaviour
         
         if (speed >= 0 && Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
-            speed -= Time.deltaTime * deAcceleration;
+            speed -= Time.deltaTime * (deAcceleration+bonusDeacceleration);
         }
 
         rb.linearVelocity = new Vector2(Dir.x, Dir.y).normalized*speed;

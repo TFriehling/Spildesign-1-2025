@@ -1181,6 +1181,9 @@ MonoBehaviour:
   acceleration: 10
   deAcceleration: 10
   powerUpManager: {fileID: 1870121595}
+  bonusMaxSpeed: 0
+  bonusAcceleration: 0
+  bonusDeacceleration: 0
 --- !u!60 &1218494176
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1238,13 +1241,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1218494174}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72bc79d378a413f458e7757a92ffa883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 2
   playerName: Player2
+  bonusHealth: 0
 --- !u!50 &1218494178
 Rigidbody2D:
   serializedVersion: 5
@@ -1358,7 +1362,7 @@ GameObject:
   - component: {fileID: 1221606152}
   - component: {fileID: 1221606153}
   m_Layer: 7
-  m_Name: PlayerPointer
+  m_Name: P1Pointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1447,6 +1451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 7654469813074782612, guid: f400033b1c737d941a8154390d4e3140, type: 3}
+  multiShot: 0
 --- !u!1 &1320076016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2135,13 +2140,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869103052}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72bc79d378a413f458e7757a92ffa883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 3
   playerName: Player1
+  bonusHealth: 0
 --- !u!60 &1869103054
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2211,6 +2217,10 @@ MonoBehaviour:
   deacceleration: 28
   maxSpeed: 30
   accelerationFailsafe: 0
+  bonusMaxSpeed: 0
+  bonusAcceleration: 0
+  bonusDeacceleration: 0
+  bonusRotateSpeed: 0
   powerUpManager: {fileID: 1870121595}
 --- !u!50 &1869103056
 Rigidbody2D:
@@ -2343,7 +2353,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: {fileID: 1869103052}
+  p1Pointer: {fileID: 1221606150}
   player2: {fileID: 1218494174}
+  p2Pointer: {fileID: 2092869321}
   powerUpPrefabs:
   - {fileID: 4235304962052674283, guid: 0dfa7a552b89deb43aaee1141974d63e, type: 3}
   - {fileID: 2348517647999131929, guid: d9304f6d7db98844489bdcc16be305ff, type: 3}
@@ -2363,13 +2375,9 @@ MonoBehaviour:
   - {fileID: 804338625}
   - {fileID: 401658509}
   powerUpSpawnRate: 20
-  spawnPositions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  powerUpInLocation: 0000000000
+  p1MaxPowerUps: 3
+  p2MaxPowerUps: 3
+  onlyOnePowerUpActive: 1
 --- !u!4 &1870121597
 Transform:
   m_ObjectHideFlags: 0
@@ -2483,7 +2491,7 @@ GameObject:
   - component: {fileID: 2092869322}
   - component: {fileID: 2092869323}
   m_Layer: 7
-  m_Name: PlayerPointer
+  m_Name: P2Pointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

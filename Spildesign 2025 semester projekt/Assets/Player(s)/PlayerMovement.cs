@@ -21,6 +21,13 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed;
     public bool accelerationFailsafe = false;
 
+    //Extra Attributes
+    public float bonusMaxSpeed = 0;
+    public float bonusAcceleration = 0;
+    public float bonusDeacceleration = 0f;
+    public float bonusRotateSpeed = 0;
+
+
     public GameObject powerUpManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -90,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward, rotateSpeed*Time.deltaTime);
+            transform.Rotate(Vector3.forward, (rotateSpeed + bonusRotateSpeed) * Time.deltaTime);
             
             //Ændre horizontalP og verticalP således at de passer til objektets rotation
             if (transform.rotation.eulerAngles.z >= 0f && transform.rotation.eulerAngles.z <= 180f)
@@ -134,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(Vector3.back, rotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.back, (rotateSpeed+bonusRotateSpeed) * Time.deltaTime);
 
             //Ændre horizontalP og verticalP således at de passer til objektets rotation
             if (transform.rotation.eulerAngles.z >= 0f && transform.rotation.eulerAngles.z <= 180f)
@@ -176,12 +183,12 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (Input.GetKey(KeyCode.W) && speed <= maxSpeed)
+        if (Input.GetKey(KeyCode.W) && speed <= (maxSpeed+bonusMaxSpeed))
         {
-             speed += Time.deltaTime * acceleration;
+             speed += Time.deltaTime * (acceleration+bonusAcceleration);
             
         }
-        else if (Input.GetKey(KeyCode.S) && speed >= maxSpeed *-1)
+        else if (Input.GetKey(KeyCode.S) && speed >= (maxSpeed + bonusMaxSpeed) * -1)
         {
 
             speed -= Time.deltaTime * backingSpeed;
@@ -197,15 +204,15 @@ public class PlayerMovement : MonoBehaviour
         if (!Input.GetKey(KeyCode.W) && speed >= 0)
 
         {
-            speed -= Time.deltaTime * deacceleration;
+            speed -= Time.deltaTime * (deacceleration+bonusDeacceleration);
             if ( speed < 1)
             {
                 speed = 0;
             }
         }
-        else if (speed >= maxSpeed * -1 && !Input.GetKey(KeyCode.S) && speed < 0)
+        else if (speed >= (maxSpeed+bonusMaxSpeed) * -1 && !Input.GetKey(KeyCode.S) && speed < 0)
         {
-            speed += Time.deltaTime * deacceleration;
+            speed += Time.deltaTime * (deacceleration+bonusDeacceleration);
 
         }
 

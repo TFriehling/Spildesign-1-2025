@@ -4,7 +4,9 @@ using UnityEngine;
 public class PickUpScript : MonoBehaviour
 {
     public GameObject player1;
+    public GameObject p1Pointer;
     public GameObject player2;
+    public GameObject p2Pointer;
     public GameObject[] powerUpPrefabs = new GameObject[3];
     public GameObject powerUpObject;
     [SerializeField] List<GameObject> p1PowerUps = new List<GameObject>();
@@ -24,6 +26,9 @@ public class PickUpScript : MonoBehaviour
     int powerUpsSpawned = 0;
     public int p1MaxPowerUps = 3;
     public int p2MaxPowerUps = 3;
+    public bool onlyOnePowerUpActive;
+    bool p1HasPowerUpActive = false;
+    bool p2HasPowerUpActive = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -68,6 +73,7 @@ public class PickUpScript : MonoBehaviour
                 p1PowerUps.RemoveAt(0);
                 Destroy(tempRef);
                 UpdatePowerUpDisplay();
+                p1HasPowerUpActive = false;
             }
         }
         if (p1powerUpTimers.Count >= 2)
@@ -80,6 +86,7 @@ public class PickUpScript : MonoBehaviour
                 p1PowerUps.RemoveAt(1);
                 Destroy(tempRef);
                 UpdatePowerUpDisplay();
+                p1HasPowerUpActive = false;
             }
         }
         if (p1powerUpTimers.Count >= 3)
@@ -92,6 +99,7 @@ public class PickUpScript : MonoBehaviour
                 p1PowerUps.RemoveAt(2);
                 Destroy(tempRef);
                 UpdatePowerUpDisplay();
+                p1HasPowerUpActive = false;
             } 
 
         }
@@ -104,6 +112,7 @@ public class PickUpScript : MonoBehaviour
                 p2PowerUps[0].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(0);
                 UpdatePowerUpDisplay();
+                p2HasPowerUpActive = false;
             }
         }
         if (p2powerUpTimers.Count >= 2)
@@ -114,6 +123,7 @@ public class PickUpScript : MonoBehaviour
                 p2PowerUps[1].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(1);
                 UpdatePowerUpDisplay();
+                p2HasPowerUpActive = false;
             }
         }
         if (p2powerUpTimers.Count >= 3)
@@ -124,6 +134,7 @@ public class PickUpScript : MonoBehaviour
                 p2PowerUps[2].GetComponent<PowerUp>().ResetOnP2();
                 p2PowerUps.RemoveAt(2);
                 UpdatePowerUpDisplay();
+                p2HasPowerUpActive = false;
             }
 
         }
@@ -416,7 +427,7 @@ public class PickUpScript : MonoBehaviour
 
     public void UseSinglePowerUpP1(int powerNumber)
     {
-        if (p1PowerUps.Count > 0)
+        if (p1PowerUps.Count > 0 && p1HasPowerUpActive == false)
         {
             if (powerNumber == 0 && p1PowerUps[p1PowerUps.Count - 1].GetComponent<PowerUp>().IsActive() == false)
             {
@@ -427,13 +438,17 @@ public class PickUpScript : MonoBehaviour
                 p1PowerUps[powerNumber-1].GetComponent<PowerUp>().UseOnP1();
             }
             powerUpsSpawned--;
+            if ( onlyOnePowerUpActive == true)
+            {
+                p1HasPowerUpActive = true;
+            }
         }
         UpdatePowerUpDisplay();
         
     }
     public void UseSinglePowerUpP2(int powerNumber)
     {
-        if (p2PowerUps.Count > 0)
+        if (p2PowerUps.Count > 0&& p2HasPowerUpActive == false)
         {
             if (powerNumber == 0 && p2PowerUps[p2PowerUps.Count - 1].GetComponent<PowerUp>().IsActive() == false)
             {
@@ -444,6 +459,10 @@ public class PickUpScript : MonoBehaviour
                 p2PowerUps[powerNumber - 1].GetComponent<PowerUp>().UseOnP2();
             }
             powerUpsSpawned--;
+            if (onlyOnePowerUpActive == true)
+            {
+                p2HasPowerUpActive = true;
+            }
         }
         UpdatePowerUpDisplay();
 
@@ -482,7 +501,8 @@ public class PickUpScript : MonoBehaviour
                {
                 p1PowerUpDisplay[i].SetActive(true);
                 p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().sprite = powerVis[p1PowerUps[i].name];
-               }
+                p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+            }
                else if (i < p1PowerUps.Count && p1PowerUps[i].GetComponent<PowerUp>().IsActive() == true)
                {
                 p1PowerUpDisplay[i].SetActive(true);
@@ -491,6 +511,7 @@ public class PickUpScript : MonoBehaviour
                }
                else
             {
+                p1PowerUpDisplay[i].GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
                 p1PowerUpDisplay[i].SetActive(false);
 
             }
@@ -552,25 +573,25 @@ class SpeedBoost : PowerUp
     }
     public override void UseOnP1()
     {
-        GameObject.Find("Player1").GetComponent<PlayerMovement>().maxSpeed += maxSpeedBonus;
-        GameObject.Find("Player1").GetComponent<PlayerMovement>().acceleration += accelerationBonus;
+        GameObject.Find("Player1").GetComponent<PlayerMovement>().bonusMaxSpeed = maxSpeedBonus;
+        GameObject.Find("Player1").GetComponent<PlayerMovement>().bonusAcceleration = accelerationBonus;
         isActive = true;
     }
     public override void UseOnP2()
     {
-        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().maxSpeed += maxSpeedBonus;
-        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().acceleration += accelerationBonus;
+        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().bonusMaxSpeed = maxSpeedBonus;
+        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().bonusAcceleration = accelerationBonus;
         isActive = true;
     }
     public override void ResetOnP1()
     {
-        GameObject.Find("Player1").GetComponent<PlayerMovement>().maxSpeed -= maxSpeedBonus;
-        GameObject.Find("Player1").GetComponent<PlayerMovement>().acceleration -= accelerationBonus;
+        GameObject.Find("Player1").GetComponent<PlayerMovement>().bonusMaxSpeed = 0;
+        GameObject.Find("Player1").GetComponent<PlayerMovement>().bonusAcceleration = 0 ;
     }
     public override void ResetOnP2()
     {
-        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().maxSpeed -= maxSpeedBonus;
-        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().acceleration -= accelerationBonus;
+        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().bonusMaxSpeed = 0;
+        GameObject.Find("Player2").GetComponent<NormalPlayerMovement>().bonusAcceleration = 0;
     }
 
 }
@@ -601,19 +622,21 @@ class Shield : PowerUp
     }
     public override void UseOnP1()
     {
+        GameObject.Find("Player1").GetComponent<PlayerHealth>().bonusHealth = shieldBonus;
         isActive = true;
     }
     public override void UseOnP2()
     {
+        GameObject.Find("Player2").GetComponent<PlayerHealth>().bonusHealth = shieldBonus;
         isActive = true;
     }
     public override void ResetOnP1()
     {
-
+        GameObject.Find("Player1").GetComponent<PlayerHealth>().bonusHealth = 0;
     }
     public override void ResetOnP2()
     {
-
+        GameObject.Find("Player2").GetComponent<PlayerHealth>().bonusHealth = 0;
     }
 }
 
@@ -643,7 +666,9 @@ class MultiShot : PowerUp
     }
     public override void UseOnP1()
     {
+        GameObject.Find("P1Pointer").GetComponent<PlayerShooting>().multiShot = true;
         isActive = true;
+        
     }
     public override void UseOnP2()
     {
@@ -651,7 +676,7 @@ class MultiShot : PowerUp
     }
     public override void ResetOnP1()
     {
-
+        GameObject.Find("P1Pointer").GetComponent<PlayerShooting>().multiShot = false;
     }
     public override void ResetOnP2()
     {
